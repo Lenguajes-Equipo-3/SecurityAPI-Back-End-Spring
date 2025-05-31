@@ -1,5 +1,6 @@
 package security.wolfgym.SecurityApiWolfGym.domain;
 
+import java.util.List;
 
 public class Usuario {
 
@@ -7,19 +8,20 @@ public class Usuario {
     private String usuario;
     private String contrasena;
     private Empleado empleado;
-    private Rol rol; // único rol asociado
+    private List<Rol> roles; // único rol asociado
 
     // Constructor vacío
     public Usuario() {
     }
 
     // Constructor con parámetros
-    public Usuario(int usuarioId, String usuario, String contrasena, Empleado empleado, Rol rol) {
+    public Usuario(int usuarioId, String usuario, String contrasena, Empleado empleado) {
         this.usuarioId = usuarioId;
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.empleado = empleado;
-        this.rol = rol;
+      
+
     }
 
     // Getters y setters
@@ -54,12 +56,10 @@ public class Usuario {
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
     }
-
-    public Rol getRol() {
-        return rol;
+    public List<Rol> getRoles() {
+        return roles;
     }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 }

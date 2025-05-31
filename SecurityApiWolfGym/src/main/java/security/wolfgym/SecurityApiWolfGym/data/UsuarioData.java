@@ -30,41 +30,46 @@ public class UsuarioData {
                 .declareParameters(
                         new SqlParameter("@usuario", Types.NVARCHAR),
                         new SqlParameter("@contrasena", Types.NVARCHAR)
-                )
-                .returningResultSet("usuario",
-                        (rs, rowNum) -> {
-                            Usuario usuario = new Usuario();
-                            usuario.setUsuarioId(rs.getInt("usuario_id"));
-                            usuario.setUsuario(rs.getString("usuario"));
-                            usuario.setContrasena(rs.getString("contrasena"));
+                );
 
-                            Empleado empleado = new Empleado();
-                            empleado.setIdEmpleado(rs.getInt("id_empleado"));
-                            empleado.setNombreEmpleado(rs.getString("nombre_empleado"));
-                            empleado.setApellidosEmpleado(rs.getString("apellidos_empleado"));
-                            usuario.setEmpleado(empleado);
-
-                            Rol rol = new Rol();
-                            rol.setIdRol(rs.getInt("rol_id"));
-                            rol.setNombreRol(rs.getString("nombre_rol"));
-                            usuario.setRol(rol);
-
-                            return usuario;
-                        });
-
+        // Ejecutar el SP
         Map<String, Object> result = simpleJdbcCall.execute(
-                Map.of(
-                        "@usuario", nombreUsuario,
-                        "@contrasena", contrasena
-                )
+                Map.of("@usuario", nombreUsuario, "@contrasena", contrasena)
         );
 
-        List<Usuario> usuarios = (List<Usuario>) result.get("usuario");
+        // El nombre por defecto del result set es "#result-set-1"
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
 
-        if (usuarios == null || usuarios.isEmpty()) {
+        if (rows == null || rows.isEmpty()) {
             return null;
         }
 
-        return usuarios.get(0);
+        // Usamos la primera fila para construir el Usuario y Empleado
+        Map<String, Object> firstRow = rows.get(0);
+
+        Usuario usuario = new Usuario();
+        usuario.setUsuarioId((Integer) firstRow.get("usuario_id"));
+        usuario.setUsuario((String) firstRow.get("usuario"));
+        usuario.setContrasena((String) firstRow.get("contrasena"));
+
+        Empleado empleado = new Empleado();
+        empleado.setIdEmpleado((Integer) firstRow.get("id_empleado"));
+        empleado.setNombreEmpleado((String) firstRow.get("nombre_empleado"));
+        empleado.setApellidosEmpleado((String) firstRow.get("apellidos_empleado"));
+        usuario.setEmpleado(empleado);
+
+        // Crear la lista de roles a partir de todas las filas
+        List<Rol> roles = new java.util.ArrayList<>();
+        for (Map<String, Object> row : rows) {
+            Rol rol = new Rol();
+            rol.setIdRol((Integer) row.get("rol_id"));
+            rol.setNombreRol((String) row.get("nombre_rol"));
+            roles.add(rol);
+        }
+        usuario.setRoles(roles);
+
+        return usuario;
     }
+
+    
 }

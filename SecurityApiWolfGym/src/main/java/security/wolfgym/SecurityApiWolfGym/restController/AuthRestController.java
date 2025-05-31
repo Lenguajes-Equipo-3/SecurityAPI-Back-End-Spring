@@ -1,5 +1,7 @@
 package security.wolfgym.SecurityApiWolfGym.restController;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,28 +22,37 @@ public class AuthRestController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try {
-            // 1. Validar usuario con la lógica de negocio
+            // 1. Validar usuario
             Usuario usuario = usuarioBusiness.validarLogin(
                     loginDTO.getUsuario(), loginDTO.getContrasena());
 
-            // 2. Generar token JWT
-            String token = jwtUtil.generateToken(
-                    usuario.getUsuario(), usuario.getRol().getNombreRol());
+            if (usuario == null) {
+                return ResponseEntity.status(401).body("❌ Usuario o contraseña incorrectos.");
+            }
 
-            // 3. Mapear a DTO de respuesta
+            // 2. Obtener los nombres de roles
+            List<String> nombresRoles = usuario.getRoles().stream()
+                    .map(rol -> rol.getNombreRol())
+                    .toList();
+
+            // 3. Generar token con los roles unidos (por ejemplo, separados por coma)
+            String rolesConcatenados = String.join(",", nombresRoles);
+            String token = jwtUtil.generateToken(usuario.getUsuario(), rolesConcatenados);
+
+            // 4. Mapear a DTO de respuesta
             UsuarioLoginResponseDTO responseDTO = UsuarioMapper.toLoginResponse(usuario, token);
 
-            // 4. Devolver respuesta exitosa con token y datos
+            // 5. Respuesta exitosa
             return ResponseEntity.ok(responseDTO);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("❌ " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("⚠️ Error interno al procesar el login."+ e.getMessage());
+            return ResponseEntity.internalServerError().body("⚠️ Error interno al procesar el login. " + e.getMessage());
         }
     }
 }
+

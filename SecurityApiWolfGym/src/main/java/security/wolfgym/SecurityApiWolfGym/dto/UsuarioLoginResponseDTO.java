@@ -1,22 +1,25 @@
 package security.wolfgym.SecurityApiWolfGym.dto;
 
+import java.util.List;
+
 public class UsuarioLoginResponseDTO {
     private String usuario;
     private String nombreEmpleado;
     private String apellidosEmpleado;
-    private String rol;
+    private List<String> roles;
     private String token;
 
     public UsuarioLoginResponseDTO() {}
 
-    public UsuarioLoginResponseDTO(String usuario, String nombreEmpleado, String apellidosEmpleado, String rol, String token) {
+    public UsuarioLoginResponseDTO(String usuario, String nombreEmpleado, String apellidosEmpleado, List<String> roles, String token) {
         this.usuario = usuario;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidosEmpleado = apellidosEmpleado;
-        this.rol = rol;
+        this.roles = roles;
         this.token = token;
     }
 
+    // Getters y setters
     public String getUsuario() {
         return usuario;
     }
@@ -41,12 +44,12 @@ public class UsuarioLoginResponseDTO {
         this.apellidosEmpleado = apellidosEmpleado;
     }
 
-    public String getRol() {
-        return rol;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String getToken() {
