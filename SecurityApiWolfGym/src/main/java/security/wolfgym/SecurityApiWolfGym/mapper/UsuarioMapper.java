@@ -18,6 +18,7 @@ public class UsuarioMapper {
                 usuario.getUsuario(),
                 usuario.getEmpleado().getNombreEmpleado(),
                 usuario.getEmpleado().getApellidosEmpleado(),
+                usuario.getEmpleado().getIdEmpleado(),
                 nombresRoles,
                 token
         );

@@ -44,9 +44,11 @@ public class AuthRestController {
 
             // 4. Mapear a DTO de respuesta
             UsuarioLoginResponseDTO responseDTO = UsuarioMapper.toLoginResponse(usuario, token);
-
+ System.out.print(responseDTO.getIdEmpleado());
             // 5. Respuesta exitosa
             return ResponseEntity.ok(responseDTO);
+            
+            
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("❌ " + e.getMessage());

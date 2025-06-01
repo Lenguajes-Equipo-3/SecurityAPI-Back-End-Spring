@@ -4,6 +4,7 @@ import java.util.List;
 
 public class UsuarioLoginResponseDTO {
     private String usuario;
+    private int idEmpleado;
     private String nombreEmpleado;
     private String apellidosEmpleado;
     private List<String> roles;
@@ -11,15 +12,24 @@ public class UsuarioLoginResponseDTO {
 
     public UsuarioLoginResponseDTO() {}
 
-    public UsuarioLoginResponseDTO(String usuario, String nombreEmpleado, String apellidosEmpleado, List<String> roles, String token) {
+    public UsuarioLoginResponseDTO(String usuario, String nombreEmpleado, String apellidosEmpleado,int idEmpleado, List<String> roles, String token) {
         this.usuario = usuario;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidosEmpleado = apellidosEmpleado;
         this.roles = roles;
         this.token = token;
+        this.idEmpleado=idEmpleado;
     }
 
-    // Getters y setters
+    public int getIdEmpleado() {
+		return idEmpleado;
+	}
+
+	public void setIdEmpleado(int idEmpleado) {
+		this.idEmpleado = idEmpleado;
+	}
+
+	// Getters y setters
     public String getUsuario() {
         return usuario;
     }
@@ -59,4 +69,6 @@ public class UsuarioLoginResponseDTO {
     public void setToken(String token) {
         this.token = token;
     }
+    
+    
 }
